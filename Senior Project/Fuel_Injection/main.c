@@ -20,6 +20,7 @@ volatile uint16_t crank_period = 0;
 volatile uint32_t half_crank_period = 0;
 char TDC = 1;
 volatile uint32_t advance = 0;
+volatile uint16_t spark_duration = 0x1;
 
 //interrupts
 void PortF_Interrupt_Init(void){
@@ -70,13 +71,13 @@ void Timer3A_Handler(void)
 {
     if(TDC)
     {
+        TIMER3_ICR_R = 0x11;        //acknowledge flag
         GPIO_PORTF_DATA_R = 0x02;      /* turn on red LED */
 
-        TIMER3_ICR_R = 0x11;        //acknowledge flag
 
         //re-start timer0 - controls duration of spark signal
         TIMER0_TAMATCHR_R = 0x00;           //set interrupt compare to 0
-        TIMER0_TAILR_R = 0x0000FFFF; //Timer A interval load value register
+        TIMER0_TAILR_R = spark_duration; //Timer A interval load value register
         TIMER0_CTL_R |= 0x01;           //enable Timer A after initialization
         TDC = 0;    //signal that the next event for time 3 will be BDC
 
@@ -90,7 +91,7 @@ void Timer3A_Handler(void)
         GPIO_PORTF_DATA_R = 0x04;      /* turn on blue LED */
         //re-start timer0 - controls duration of spark signal
         TIMER0_TAMATCHR_R = 0x00;           //set interrupt compare to 0
-        TIMER0_TAILR_R = 0x0000FFFF; //Timer A interval load value register
+        TIMER0_TAILR_R = spark_duration; //Timer A interval load value register
         TIMER0_CTL_R |= 0x01;           //enable Timer A after initialization
     }
 }
@@ -139,5 +140,13 @@ int main(void){
   PortF_Interrupt_Init();
   GPIO_Init();
   while(1){
+      if(crank_period_capture > 33000)
+      {
+          spark_duration = 0xFFF;
+      }
+      else
+      {
+          spark_duration = 0x1;
+      }
   }
 }
