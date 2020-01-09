@@ -3,7 +3,6 @@
 
 
 //defines
-//PWM
 
 
 //void DisableInterrupts(void); // Disable interrupts
@@ -21,6 +20,17 @@ volatile uint32_t half_crank_period = 0;
 char TDC = 1;
 volatile uint32_t advance = 0;
 volatile uint16_t spark_duration = 0x1;
+volatile uint16_t fuel_duration = 0x1;
+volatile uint8_t firing_order[] = {1,4,3,2};
+volatile uint8_t cyl_to_fuel = 1;
+volatile uint8_t counter = 0;
+
+static uint16_t front_cyl_bank_spark = 0x01;
+static uint16_t rear_cyl_bank_spark = 0x02;
+static uint16_t cyl_1_fuel = 0x04;
+static uint16_t cyl_2_fuel = 0x08;
+static uint16_t cyl_3_fuel = 0x10;
+static uint16_t cyl_4_fuel = 0x20;
 
 //interrupts
 void PortF_Interrupt_Init(void){
@@ -41,12 +51,19 @@ void PortF_Interrupt_Init(void){
   NVIC_EN0_R = 0x40000000;      //enable interrupt 30 in NVIC
   EnableInterrupts();           //Clears the I bit
 }
+
+//Purpose: calculates RPMs and starts the timer that starts the fuel and spark pulses
+//Parameters: none
+//Returns: none
 void GPIOPortF_Handler(void){
 
         FallingEdges = 0;
   TDC = 1;   //if this interrupt has fired piston #1 is coming up on TDC
 
   GPIO_PORTF_ICR_R = 0x10;      // acknowledge flag4
+
+  counter++;
+  cyl_to_fuel = firing_order[counter]
 
   //re-start timer2 - determines crank period (RPMs)
   crank_period_capture = TIMER2_TAV_R;  //capture timer2's value
@@ -55,31 +72,52 @@ void GPIOPortF_Handler(void){
   TIMER2_TAV_R = 0;   //reset timer 2
   TIMER2_CTL_R |= 0x01;           //enable Timer A after initialization
 
-  //re-start timer3 - controls spark signal for BDC event
+  //re-start timer3 - controls signal for BDC event
   TIMER3_TAMATCHR_R = 0x00;           //set interrupt compare to 0
   TIMER3_TAILR_R = advance; //Timer A interval load value register
   TIMER3_CTL_R |= 0x01;           //enable Timer A after initialization
 
 }
 
+//Purpose: interrupt that turns off the spark pulse.
+//Parameters: none
+//Returns: none
 void Timer0A_Handler(void)
 {
     TIMER0_ICR_R = 0x11;        //acknowledge flag
-    GPIO_PORTF_DATA_R = 0;      //turn off red LED
+    GPIO_PORTF_DATA_R = 0;      //turn off LEDs
 }
+
+//Purpose: interrupt that turns off the fuel pulse.
+//Parameters: none
+//Returns: none
+void Timer1A_Handler(void)
+{
+    TIMER1_ICR_R = 0x11;        //acknowledge flag
+
+}
+
+//Purpose: starts fuel and spark pulses at the appropriate advance times, also re-arms itself for the BDC timing
+//Parameters: none
+//Returns: none
 void Timer3A_Handler(void)
 {
     if(TDC)
     {
         TIMER3_ICR_R = 0x11;        //acknowledge flag
-        GPIO_PORTF_DATA_R = 0x02;      /* turn on red LED */
-
+        GPIO_PORTB_DATA_R = front_cyl_bank_spark;      /* turn on red LED */
+        GPIO_PORTB_DATA_R
 
         //re-start timer0 - controls duration of spark signal
         TIMER0_TAMATCHR_R = 0x00;           //set interrupt compare to 0
         TIMER0_TAILR_R = spark_duration; //Timer A interval load value register
         TIMER0_CTL_R |= 0x01;           //enable Timer A after initialization
-        TDC = 0;    //signal that the next event for time 3 will be BDC
+        TDC = 0;    //signal that the next event for time 3
+
+        //restart timer1 - controls duration for fuel signal
+        TIMER1_TAMATCHR_R = 0x00;           //set interrupt compare to 0
+        TIMER1_TAILR_R = fuel_duration; //Timer A interval load value register
+        TIMER1_CTL_R |= 0x01;           //enable Timer A after initialization
 
         //re-start timer3 - controls spark signal for BDC event
         TIMER3_TAMATCHR_R = 0x00;           //set interrupt compare to 0
@@ -88,18 +126,32 @@ void Timer3A_Handler(void)
     }else
     {
         TIMER3_ICR_R = 0x11;        //acknowledge flag
-        GPIO_PORTF_DATA_R = 0x04;      /* turn on blue LED */
+        GPIO_PORTB_DATA_R = rear_cyl_bank_spark;      /* turn on blue LED */
+        GPIO_PORTB_DATA_R
         //re-start timer0 - controls duration of spark signal
         TIMER0_TAMATCHR_R = 0x00;           //set interrupt compare to 0
         TIMER0_TAILR_R = spark_duration; //Timer A interval load value register
         TIMER0_CTL_R |= 0x01;           //enable Timer A after initialization
+
+        //restart timer1 - controls duration for fuel signal
+        TIMER1_TAMATCHR_R = 0x00;           //set interrupt compare to 0
+        TIMER1_TAILR_R = fuel_duration; //Timer A interval load value register
+        TIMER1_CTL_R |= 0x01;           //enable Timer A after initialization
     }
 }
 void GPIO_Init(void)
 {
     SYSCTL_RCGC2_R |= 0x00000020;   //enable clock to GPIOF at clock gating control register
-    GPIO_PORTF_DIR_R |= 0x0E;        //enable the GPIO pins for the LED (PF3, 2 1) as output
-    GPIO_PORTF_DEN_R |= 0x0E;        //enable the GPIO pins for digital function
+    GPIO_PORTF_DIR_R |= 0xEF;        //enable the GPIO pins on port F: PF4 is input for crank signal, all others are outputs for fuel or spark pulses
+    GPIO_PORTF_AFSEL_R &= ~0XFF;    //disable alternate port functions
+    GPIO_PORTF_DEN_R |= 0xEF;        //enable the GPIO pins for digital function
+
+    //PortB is used for sending spark and fuel pulses
+    SYSCTL_RCGC2_R |= 0x2;   //enable clock to GPIOF at clock gating control register
+    GPIO_PORTB_DIR_R |= 0xFF;        //enable the GPIO pins on port F: PF4 is input for crank signal, all others are outputs for fuel or spark pulses
+    GPIO_PORTB_AFSEL_R &= ~0XFF;    //disable alternate port functions
+    GPIO_PORTB_DEN_R |= 0xFF;        //enable the GPIO pins for digital function
+
 }
 void Timer0_Init(void)
 {
@@ -112,17 +164,30 @@ void Timer0_Init(void)
     NVIC_PRI4_R = (NVIC_PRI4_R&0x00FFFFFF)|0x40000000; // 8) priority 2
     NVIC_EN0_R = 0x80000;      //enable interrupt 19 in NVIC
 }
+
+void Timer1_Init(void)
+{
+    SYSCTL_RCGC1_R |= SYSCTL_RCGC1_TIMER1; //activate timer1
+    TIMER1_CTL_R &= ~0x00000001;     //disable timer3A during setup
+    TIMER1_CFG_R = 0x00;            //32-bit option
+    TIMER1_TAMR_R = 0x01;           //one-shot mode and down-counter
+    TIMER1_TAMR_R |= 0x20;          //enable interrupts for one-shot mode
+    TIMER1_IMR_R |= 0x1F;           // enable compare match interrupt
+    NVIC_PRI5_R = (NVIC_PRI5_R&0x1FFF)|0x0008000; // 8) priority 2
+    NVIC_EN0_R = 0x200000;      //enable interrupt
+}
+
 void Timer2_Init(void)
 {
     SYSCTL_RCGC1_R |= SYSCTL_RCGC1_TIMER2; //enable clock for timer2
     TIMER2_CTL_R &= ~0x00000001;     //disable timer2A during setup
     TIMER2_CFG_R = 0x00;            //32-bit option
     TIMER2_TAMR_R = 0x12;           //periodic mode and down-counter
-    //TIMER2_TAPR_R |= 0x04;          //divide timer for sys_clk/2
+    //TIMER2_TAPR_R |= 0x04;          //divide timer for sys_clk/2  21 20  19 18 17 16  15 14 13 12  11 10 9 8  7 6 5 4  3 2 1 0
 }
 void Timer3_Init(void)
 {
-    SYSCTL_RCGC1_R |= SYSCTL_RCGC1_TIMER3; //activate timer0
+    SYSCTL_RCGC1_R |= SYSCTL_RCGC1_TIMER3; //activate timer3
     TIMER3_CTL_R &= ~0x00000001;     //disable timer0A during setup
     TIMER3_CFG_R = 0x00;            //32-bit option
     TIMER3_TAMR_R = 0x01;           //one-shot mode and down-counter
@@ -135,6 +200,7 @@ void Timer3_Init(void)
 //debug code
 int main(void){
   Timer0_Init();
+  Timer1_Init();
   Timer2_Init();
   Timer3_Init();
   PortF_Interrupt_Init();
@@ -142,7 +208,7 @@ int main(void){
   while(1){
       if(crank_period_capture > 33000)
       {
-          spark_duration = 0xFFF;
+          spark_duration = 0xFFFF;
       }
       else
       {
