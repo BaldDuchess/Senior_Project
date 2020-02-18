@@ -14219,14 +14219,12 @@ Source: Samtec TSW.pdf</description>
 <parts>
 <part name="IC1" library="linear" library_urn="urn:adsk.eagle:library:262" deviceset="78*" device="T" package3d_urn="urn:adsk.eagle:package:16414/1" technology="05"/>
 <part name="X_1" library="ngspice-simulation" library_urn="urn:adsk.eagle:library:527439" deviceset="GND" device=""/>
-<part name="POWER_N_MOSFET" library="transistor-power" library_urn="urn:adsk.eagle:library:400" deviceset="IRF520" device="" package3d_urn="urn:adsk.eagle:package:29484/3" value="30N06L"/>
 <part name="R1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0207/7" package3d_urn="urn:adsk.eagle:package:23493/2" value="10K"/>
 <part name="LEVEL_SHIFTER" library="transistor-power" library_urn="urn:adsk.eagle:library:400" deviceset="IRF520" device="" package3d_urn="urn:adsk.eagle:package:29484/3" value="2n7000"/>
 <part name="FUEL_INJECTOR" library="con-molex" library_urn="urn:adsk.eagle:library:165" deviceset="KK-156-4" device="" package3d_urn="urn:adsk.eagle:package:8078802/1"/>
 <part name="P+1" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="5V"/>
 <part name="P+2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
 <part name="X2" library="con-samtec" library_urn="urn:adsk.eagle:library:184" deviceset="TSW-140-*-G-S" device="" technology="07"/>
-<part name="C1" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-US" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1"/>
 <part name="C2" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-US" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1" value="0.33uf"/>
 <part name="C3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-US" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1" value="0.1uf"/>
 <part name="POWER_N_MOSFET2" library="transistor-power" library_urn="urn:adsk.eagle:library:400" deviceset="IRF520" device="" package3d_urn="urn:adsk.eagle:package:29484/3" value="30N06L"/>
@@ -14237,6 +14235,12 @@ Source: Samtec TSW.pdf</description>
 <part name="P+4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
 <part name="SPARK_PLUG_POWER" library="con-molex" library_urn="urn:adsk.eagle:library:165" deviceset="KK-156-2" device="" package3d_urn="urn:adsk.eagle:package:8078800/1"/>
 <part name="SPARK_PLUG_GND" library="con-molex" library_urn="urn:adsk.eagle:library:165" deviceset="KK-156-2" device="" package3d_urn="urn:adsk.eagle:package:8078800/1"/>
+<part name="R2" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0207/7" package3d_urn="urn:adsk.eagle:package:23493/2" value="10K"/>
+<part name="P+5" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device=""/>
+<part name="P+6" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="VCC" device="" value="3.3V"/>
+<part name="CRANK_SENSOR" library="con-molex" library_urn="urn:adsk.eagle:library:165" deviceset="KK-156-2" device="" package3d_urn="urn:adsk.eagle:package:8078800/1"/>
+<part name="R3" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0207/7" package3d_urn="urn:adsk.eagle:package:23493/2" value="10K"/>
+<part name="R4" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="R-US_" device="0207/7" package3d_urn="urn:adsk.eagle:package:23493/2" value="10K"/>
 </parts>
 <sheets>
 <sheet>
@@ -14248,30 +14252,26 @@ Source: Samtec TSW.pdf</description>
 <attribute name="VALUE" x="-7.62" y="135.255" size="1.778" layer="96"/>
 </instance>
 <instance part="X_1" gate="G$1" x="0" y="114.3" smashed="yes"/>
-<instance part="POWER_N_MOSFET" gate="G$1" x="43.18" y="76.2" smashed="yes">
-<attribute name="NAME" x="50.8" y="78.74" size="1.778" layer="95"/>
-<attribute name="VALUE" x="50.8" y="76.2" size="1.778" layer="96"/>
+<instance part="R1" gate="G$1" x="53.34" y="58.42" smashed="yes" rot="R90">
+<attribute name="NAME" x="51.8414" y="54.61" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="56.642" y="54.61" size="1.778" layer="96" rot="R90"/>
 </instance>
-<instance part="R1" gate="G$1" x="66.04" y="91.44" smashed="yes">
-<attribute name="NAME" x="62.23" y="92.9386" size="1.778" layer="95"/>
-<attribute name="VALUE" x="62.23" y="88.138" size="1.778" layer="96"/>
+<instance part="LEVEL_SHIFTER" gate="G$1" x="60.96" y="50.8" smashed="yes" rot="R270">
+<attribute name="NAME" x="63.5" y="43.18" size="1.778" layer="95" rot="R270"/>
+<attribute name="VALUE" x="60.96" y="43.18" size="1.778" layer="96" rot="R270"/>
 </instance>
-<instance part="LEVEL_SHIFTER" gate="G$1" x="38.1" y="45.72" smashed="yes">
-<attribute name="NAME" x="45.72" y="48.26" size="1.778" layer="95"/>
-<attribute name="VALUE" x="45.72" y="45.72" size="1.778" layer="96"/>
+<instance part="FUEL_INJECTOR" gate="-1" x="22.86" y="160.02" smashed="yes">
+<attribute name="NAME" x="25.4" y="159.258" size="1.524" layer="95"/>
+<attribute name="VALUE" x="22.098" y="161.417" size="1.778" layer="96"/>
 </instance>
-<instance part="FUEL_INJECTOR" gate="-1" x="17.78" y="58.42" smashed="yes">
-<attribute name="NAME" x="20.32" y="57.658" size="1.524" layer="95"/>
-<attribute name="VALUE" x="17.018" y="59.817" size="1.778" layer="96"/>
+<instance part="FUEL_INJECTOR" gate="-2" x="22.86" y="157.48" smashed="yes">
+<attribute name="NAME" x="25.4" y="156.718" size="1.524" layer="95"/>
 </instance>
-<instance part="FUEL_INJECTOR" gate="-2" x="17.78" y="55.88" smashed="yes">
-<attribute name="NAME" x="20.32" y="55.118" size="1.524" layer="95"/>
+<instance part="FUEL_INJECTOR" gate="-3" x="22.86" y="154.94" smashed="yes">
+<attribute name="NAME" x="25.4" y="154.178" size="1.524" layer="95"/>
 </instance>
-<instance part="FUEL_INJECTOR" gate="-3" x="17.78" y="53.34" smashed="yes">
-<attribute name="NAME" x="20.32" y="52.578" size="1.524" layer="95"/>
-</instance>
-<instance part="FUEL_INJECTOR" gate="-4" x="17.78" y="50.8" smashed="yes">
-<attribute name="NAME" x="20.32" y="50.038" size="1.524" layer="95"/>
+<instance part="FUEL_INJECTOR" gate="-4" x="22.86" y="152.4" smashed="yes">
+<attribute name="NAME" x="25.4" y="151.638" size="1.524" layer="95"/>
 </instance>
 <instance part="P+1" gate="VCC" x="17.78" y="137.16" smashed="yes">
 <attribute name="VALUE" x="15.24" y="134.62" size="1.778" layer="96" rot="R90"/>
@@ -14286,8 +14286,8 @@ Source: Samtec TSW.pdf</description>
 <instance part="X2" gate="-2" x="140.97" y="119.38" smashed="yes">
 <attribute name="NAME" x="143.51" y="118.618" size="1.524" layer="95"/>
 </instance>
-<instance part="X2" gate="-3" x="140.97" y="116.84" smashed="yes">
-<attribute name="NAME" x="143.51" y="116.078" size="1.524" layer="95"/>
+<instance part="X2" gate="-3" x="46.99" y="48.26" smashed="yes" rot="R180">
+<attribute name="NAME" x="44.45" y="49.022" size="1.524" layer="95" rot="R180"/>
 </instance>
 <instance part="X2" gate="-4" x="140.97" y="114.3" smashed="yes">
 <attribute name="NAME" x="143.51" y="113.538" size="1.524" layer="95"/>
@@ -14400,10 +14400,6 @@ Source: Samtec TSW.pdf</description>
 <instance part="X2" gate="-40" x="140.97" y="22.86" smashed="yes">
 <attribute name="NAME" x="143.51" y="22.098" size="1.524" layer="95"/>
 </instance>
-<instance part="C1" gate="G$1" x="91.44" y="83.82" smashed="yes">
-<attribute name="NAME" x="92.456" y="84.455" size="1.778" layer="95"/>
-<attribute name="VALUE" x="92.456" y="79.629" size="1.778" layer="96"/>
-</instance>
 <instance part="C2" gate="G$1" x="-15.24" y="121.92" smashed="yes">
 <attribute name="NAME" x="-14.224" y="122.555" size="1.778" layer="95"/>
 <attribute name="VALUE" x="-14.224" y="117.729" size="1.778" layer="96"/>
@@ -14444,6 +14440,32 @@ Source: Samtec TSW.pdf</description>
 <attribute name="NAME" x="114.3" y="108.458" size="1.524" layer="95"/>
 <attribute name="VALUE" x="110.998" y="110.617" size="1.778" layer="96"/>
 </instance>
+<instance part="R2" gate="G$1" x="68.58" y="58.42" smashed="yes" rot="R90">
+<attribute name="NAME" x="67.0814" y="54.61" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="71.882" y="54.61" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="P+5" gate="VCC" x="68.58" y="68.58" smashed="yes">
+<attribute name="VALUE" x="66.04" y="66.04" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="P+6" gate="VCC" x="53.34" y="68.58" smashed="yes">
+<attribute name="VALUE" x="50.8" y="66.04" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="CRANK_SENSOR" gate="-1" x="76.2" y="48.26" smashed="yes">
+<attribute name="NAME" x="78.74" y="47.498" size="1.524" layer="95"/>
+<attribute name="VALUE" x="75.438" y="49.657" size="1.778" layer="96"/>
+</instance>
+<instance part="CRANK_SENSOR" gate="-2" x="76.2" y="45.72" smashed="yes">
+<attribute name="NAME" x="78.74" y="44.958" size="1.524" layer="95"/>
+<attribute name="VALUE" x="75.438" y="47.117" size="1.778" layer="96"/>
+</instance>
+<instance part="R3" gate="G$1" x="119.38" y="124.46" smashed="yes" rot="R90">
+<attribute name="NAME" x="117.8814" y="120.65" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="122.682" y="120.65" size="1.778" layer="96" rot="R90"/>
+</instance>
+<instance part="R4" gate="G$1" x="119.38" y="160.02" smashed="yes" rot="R90">
+<attribute name="NAME" x="117.8814" y="156.21" size="1.778" layer="95" rot="R90"/>
+<attribute name="VALUE" x="122.682" y="156.21" size="1.778" layer="96" rot="R90"/>
+</instance>
 </instances>
 <busses>
 </busses>
@@ -14479,6 +14501,11 @@ Source: Samtec TSW.pdf</description>
 <wire x1="106.68" y1="139.7" x2="109.22" y2="139.7" width="0.1524" layer="91"/>
 <pinref part="SPARK_PLUG_POWER" gate="-1" pin="S"/>
 </segment>
+<segment>
+<pinref part="P+5" gate="VCC" pin="VCC"/>
+<pinref part="R2" gate="G$1" pin="2"/>
+<wire x1="68.58" y1="66.04" x2="68.58" y2="63.5" width="0.1524" layer="91"/>
+</segment>
 </net>
 <net name="0" class="0">
 <segment>
@@ -14496,25 +14523,41 @@ Source: Samtec TSW.pdf</description>
 <pinref part="POWER_N_MOSFET3" gate="G$1" pin="S"/>
 <pinref part="X_3" gate="G$1" pin="0"/>
 <wire x1="109.22" y1="157.48" x2="109.22" y2="160.02" width="0.1524" layer="91"/>
+<wire x1="109.22" y1="157.48" x2="114.3" y2="157.48" width="0.1524" layer="91"/>
+<junction x="109.22" y="157.48"/>
+<wire x1="114.3" y1="157.48" x2="114.3" y2="165.1" width="0.1524" layer="91"/>
+<pinref part="R4" gate="G$1" pin="2"/>
+<wire x1="114.3" y1="165.1" x2="119.38" y2="165.1" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="POWER_N_MOSFET2" gate="G$1" pin="S"/>
 <pinref part="X_2" gate="G$1" pin="0"/>
 <wire x1="109.22" y1="121.92" x2="109.22" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="109.22" y1="121.92" x2="114.3" y2="121.92" width="0.1524" layer="91"/>
+<junction x="109.22" y="121.92"/>
+<wire x1="114.3" y1="121.92" x2="114.3" y2="129.54" width="0.1524" layer="91"/>
+<pinref part="R3" gate="G$1" pin="2"/>
+<wire x1="114.3" y1="129.54" x2="119.38" y2="129.54" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$1" class="0">
 <segment>
 <pinref part="POWER_N_MOSFET3" gate="G$1" pin="G"/>
-<wire x1="114.3" y1="154.94" x2="125.73" y2="154.94" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="154.94" x2="119.38" y2="154.94" width="0.1524" layer="91"/>
 <pinref part="X2" gate="-1" pin="1"/>
+<pinref part="R4" gate="G$1" pin="1"/>
+<wire x1="119.38" y1="154.94" x2="125.73" y2="154.94" width="0.1524" layer="91"/>
+<junction x="119.38" y="154.94"/>
 </segment>
 </net>
 <net name="N$2" class="0">
 <segment>
 <pinref part="POWER_N_MOSFET2" gate="G$1" pin="G"/>
 <pinref part="X2" gate="-2" pin="1"/>
-<wire x1="114.3" y1="119.38" x2="138.43" y2="119.38" width="0.1524" layer="91"/>
+<wire x1="114.3" y1="119.38" x2="119.38" y2="119.38" width="0.1524" layer="91"/>
+<pinref part="R3" gate="G$1" pin="1"/>
+<wire x1="119.38" y1="119.38" x2="138.43" y2="119.38" width="0.1524" layer="91"/>
+<junction x="119.38" y="119.38"/>
 </segment>
 </net>
 <net name="N$3" class="0">
@@ -14529,6 +14572,38 @@ Source: Samtec TSW.pdf</description>
 <pinref part="POWER_N_MOSFET2" gate="G$1" pin="D"/>
 <wire x1="109.22" y1="109.22" x2="109.22" y2="111.76" width="0.1524" layer="91"/>
 <pinref part="SPARK_PLUG_GND" gate="-2" pin="S"/>
+</segment>
+</net>
+<net name="N$5" class="0">
+<segment>
+<pinref part="R1" gate="G$1" pin="1"/>
+<wire x1="53.34" y1="53.34" x2="53.34" y2="48.26" width="0.1524" layer="91"/>
+<pinref part="LEVEL_SHIFTER" gate="G$1" pin="S"/>
+<wire x1="53.34" y1="48.26" x2="55.88" y2="48.26" width="0.1524" layer="91"/>
+<pinref part="X2" gate="-3" pin="1"/>
+<wire x1="49.53" y1="48.26" x2="53.34" y2="48.26" width="0.1524" layer="91"/>
+<junction x="53.34" y="48.26"/>
+</segment>
+</net>
+<net name="N$6" class="0">
+<segment>
+<pinref part="R1" gate="G$1" pin="2"/>
+<wire x1="53.34" y1="63.5" x2="58.42" y2="63.5" width="0.1524" layer="91"/>
+<pinref part="LEVEL_SHIFTER" gate="G$1" pin="G"/>
+<wire x1="58.42" y1="63.5" x2="58.42" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="P+6" gate="VCC" pin="VCC"/>
+<wire x1="53.34" y1="66.04" x2="53.34" y2="63.5" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$7" class="0">
+<segment>
+<pinref part="LEVEL_SHIFTER" gate="G$1" pin="D"/>
+<wire x1="66.04" y1="48.26" x2="68.58" y2="48.26" width="0.1524" layer="91"/>
+<pinref part="R2" gate="G$1" pin="1"/>
+<wire x1="68.58" y1="48.26" x2="68.58" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="CRANK_SENSOR" gate="-1" pin="S"/>
+<wire x1="68.58" y1="48.26" x2="73.66" y2="48.26" width="0.1524" layer="91"/>
+<junction x="68.58" y="48.26"/>
 </segment>
 </net>
 </nets>
